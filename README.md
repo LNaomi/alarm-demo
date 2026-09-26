@@ -1,5 +1,9 @@
 # alarm-fde-demo · 网元告警采集与自动校验
 
+[![CI](https://github.com/LNaomi/alarm-fde-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/LNaomi/alarm-fde-demo/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)
+![Runtime deps](https://img.shields.io/badge/runtime%20deps-0-brightgreen)
+
 一条可复现的端到端流水线：**模拟网元上报 → 采集/解析 → 规则校验 → HTML 报告**。
 
 用电信领域（基站/OAM）的真实问题做壳，验证的是工程能力：可复现的数据构造、
