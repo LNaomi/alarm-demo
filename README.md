@@ -1,6 +1,6 @@
 # alarm-fde-demo · 网元告警采集与自动校验
 
-[![CI](https://github.com/LNaomi/alarm-fde-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/LNaomi/alarm-fde-demo/actions/workflows/ci.yml)
+[![CI](https://github.com/LNaomi/alarm-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/LNaomi/alarm-demo/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)
 ![Runtime deps](https://img.shields.io/badge/runtime%20deps-0-brightgreen)
 
