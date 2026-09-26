@@ -1,0 +1,12 @@
+{
+  "elements": [
+    { "ne_id": "GNB-HZ-0001", "ne_type": "gNodeB", "site": "杭州滨江" },
+    { "ne_id": "GNB-HZ-0002", "ne_type": "gNodeB", "site": "杭州西湖" },
+    { "ne_id": "GNB-HZ-0003", "ne_type": "gNodeB", "site": "杭州未来科技城" },
+    { "ne_id": "BTS-HZ-0101", "ne_type": "BTS", "site": "杭州萧山" },
+    { "ne_id": "BTS-HZ-0102", "ne_type": "BTS", "site": "杭州余杭" },
+    { "ne_id": "TN-HZ-0201", "ne_type": "Transport", "site": "杭州城域网核心" },
+    { "ne_id": "TN-HZ-0202", "ne_type": "Transport", "site": "杭州城域网汇聚" },
+    { "ne_id": "OAM-HZ-9001", "ne_type": "OAM", "site": "杭州网管中心" }
+  ]
+}
