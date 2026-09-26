@@ -36,6 +36,19 @@ def test_zero_anomaly_rate_produces_no_violation():
     assert result.pass_rate == 1.0
 
 
+def test_duplicate_rate_is_independent_of_anomaly_rate():
+    """门禁参数必须能各自归零：只关 anomaly_rate 仍会残留重复上报。"""
+    records = AlarmSimulator(seed=5, anomaly_rate=0.0, duplicate_rate=0.5).generate(50, now=NOW)
+    result = validate(parse_records(records).alarms, now=NOW)
+
+    assert all(v.rule == "R006" for v in result.violations)
+    assert result.violations
+
+    # 两个参数都归零后才是真正干净的数据（CI 门禁依赖这一点）
+    fully_clean = collect(count=50, seed=5, now=NOW, anomaly_rate=0.0, duplicate_rate=0.0)
+    assert validate(parse_records(fully_clean).alarms, now=NOW).violations == []
+
+
 def test_full_anomaly_rate_produces_violations():
     dirty = AlarmSimulator(seed=3, anomaly_rate=1.0, duplicate_rate=0.5).generate(50, now=NOW)
     result = validate(parse_records(dirty).alarms, now=NOW)

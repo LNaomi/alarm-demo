@@ -18,18 +18,19 @@ AlarmSimulator  →  JSONL 记录  →  Alarm 对象  →  Violation 列表  →
 ## 快速开始
 
 ```bash
-python3 -m pip install -r requirements.txt   # 只有 pytest，运行期零依赖
+python3 -m pip install -e ".[test]"   # 可编辑安装；运行期零第三方依赖，只装测试用的 pytest
 
 make test      # 或 python3 -m pytest
 make report    # 生成 reports/report.html
 make demo      # 测试 + 出报告
 ```
 
-直接跑 CLI：
+装好后有命令行入口，也可以直接 `python3 -m alarm_monitor`：
 
 ```bash
-python3 -m alarm_monitor --count 200 --output reports/report.html
-python3 -m alarm_monitor --data data/sample_alarms.jsonl --strict   # 有 error 就退出码 1
+alarm-monitor --count 200 --output reports/report.html
+alarm-monitor --data data/sample_alarms.jsonl --strict   # 有 error 就退出码 1
+alarm-monitor --anomaly-rate 0 --duplicate-rate 0 --strict   # 干净数据 + 误报门禁
 ```
 
 `--seed` 固定随机种子，**同一个种子永远产出同一批数据**，报告可复现、可对比。
@@ -37,6 +38,7 @@ python3 -m alarm_monitor --data data/sample_alarms.jsonl --strict   # 有 error 
 ## 目录结构
 
 ```
+pyproject.toml     打包与依赖声明（运行期 dependencies = []，零第三方依赖）
 src/alarm_monitor/
 ├── models.py      告警数据模型、严重等级、码段映射
 ├── inventory.py   网元台账（内置 + JSON 加载）
@@ -76,9 +78,10 @@ data/              网元台账 + 样例采集数据（JSONL）
 - **解析层宽容、校验层严格**：解析不抛异常，字段缺失保留为空值交给规则判定，
   这样脏数据能进报告而不是被静默丢弃——运维真正需要看到的正是这些异常。
 - **主动注入脏数据**：干净数据下所有规则的命中数都是 0，demo 没有说服力。
-  采集器按 12% 比例注入缺字段、等级非法、时间戳穿越、重复上报等异常。
-- **阈值参数化**：`--anomaly-rate 0 --strict` 可作为 CI 质量门禁——
-  一旦校验逻辑把正常告警误判为错误，流水线立刻失败。
+  采集器按 12% 比例注入缺字段、等级非法、时间戳穿越等异常，另按 3% 注入重复上报
+  ——两个比例**互相独立**，可分别归零。
+- **误报门禁**：CI 里用 `--anomaly-rate 0 --duplicate-rate 0 --strict` 喂完全干净的数据，
+  校验结果必须零 error。一旦规则把正常告警误判为错误，流水线立刻失败。
 
 ## 简历上怎么写（FDE 版）
 

@@ -8,3 +8,9 @@ htmlcov/
 reports/*.html
 reports/*.jsonl
 .DS_Store
+
+# 打包与本地临时产物
+*.egg-info/
+build/
+dist/
+.pytest-tmp/

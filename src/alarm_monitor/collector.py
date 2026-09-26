@@ -124,6 +124,9 @@ def collect(
     seed: int = 20260926,
     now: datetime | None = None,
     anomaly_rate: float = 0.12,
+    duplicate_rate: float = 0.03,
 ) -> list[dict]:
     """便捷入口：直接拿到一批模拟上报记录。"""
-    return AlarmSimulator(seed=seed, anomaly_rate=anomaly_rate).generate(count=count, now=now)
+    return AlarmSimulator(
+        seed=seed, anomaly_rate=anomaly_rate, duplicate_rate=duplicate_rate
+    ).generate(count=count, now=now)

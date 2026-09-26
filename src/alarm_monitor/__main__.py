@@ -26,6 +26,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--count", type=int, default=200, help="模拟采集的告警条数（默认 200）")
     parser.add_argument("--seed", type=int, default=20260926, help="随机种子，保证可复现")
     parser.add_argument("--anomaly-rate", type=float, default=0.12, help="脏数据注入比例")
+    parser.add_argument(
+        "--duplicate-rate", type=float, default=0.03, help="重复上报注入比例（模拟网元重传）"
+    )
     parser.add_argument("--data", type=Path, default=None, help="从 JSONL 文件读取真实采集数据")
     parser.add_argument("--inventory", type=Path, default=None, help="网元台账 JSON 文件路径")
     parser.add_argument("--dump-raw", type=Path, default=None, help="把采集到的原始数据存成 JSONL")
@@ -45,7 +48,9 @@ def main(argv: list[str] | None = None) -> int:
         origin = f"文件 {args.data}"
     else:
         records = AlarmSimulator(
-            seed=args.seed, anomaly_rate=args.anomaly_rate
+            seed=args.seed,
+            anomaly_rate=args.anomaly_rate,
+            duplicate_rate=args.duplicate_rate,
         ).generate(count=args.count, now=now)
         origin = f"模拟器 seed={args.seed}"
     if args.dump_raw is not None:

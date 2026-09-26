@@ -31,6 +31,7 @@ def run(
     count: int = 200,
     seed: int = 20260926,
     anomaly_rate: float = 0.12,
+    duplicate_rate: float = 0.03,
     data: str | Path | None = None,
     inventory: str | Path | None = None,
     output: str | Path | None = None,
@@ -45,7 +46,9 @@ def run(
     if data is not None:
         records = read_jsonl(data)
     else:
-        records = AlarmSimulator(seed=seed, anomaly_rate=anomaly_rate).generate(count=count, now=now)
+        records = AlarmSimulator(
+            seed=seed, anomaly_rate=anomaly_rate, duplicate_rate=duplicate_rate
+        ).generate(count=count, now=now)
 
     parsed = parse_records(records)
     validation = validate(parsed.alarms, now=now, inventory=load_inventory(inventory))

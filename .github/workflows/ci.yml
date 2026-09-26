@@ -9,6 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
@@ -18,20 +19,24 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: 安装依赖
+      # 可编辑安装：src 布局的包必须装过才能 `python -m alarm_monitor` / `alarm-monitor`
+      - name: 安装（运行期零第三方依赖）
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -e ".[test]"
 
       - name: 运行测试
         run: pytest
 
-      # --anomaly-rate 0 表示喂干净数据 + --strict 做质量门禁：
-      # 一旦校验逻辑把正常告警误判为错误，CI 立刻失败。
-      - name: 生成报告并作为构建产物上传
-        run: python -m alarm_monitor --count 200 --anomaly-rate 0 --output reports/report.html --strict
+      # 质量门禁（误报门禁）：喂**完全干净**的数据（不注入脏数据、不模拟重传），
+      # 校验结果必须零 error。一旦规则把正常告警误判为错误，CI 立刻失败。
+      - name: 生成报告（误报门禁）
+        run: |
+          alarm-monitor --count 200 --anomaly-rate 0 --duplicate-rate 0 \
+            --output reports/report.html --strict
 
-      - uses: actions/upload-artifact@v4
+      - name: 上传报告产物
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: alarm-report-py${{ matrix.python-version }}

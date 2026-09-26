@@ -1,7 +1,7 @@
 .PHONY: install test report demo clean
 
 install:
-	python3 -m pip install -r requirements.txt
+	python3 -m pip install -e ".[test]"
 
 test:
 	python3 -m pytest
